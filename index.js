@@ -4,6 +4,11 @@ var path = require('path');
 var rootPath = '';
 var namespace = '';
 var client = null;
+var HEADERS = {
+    'Cache-Control': 'max-age=31104000',
+    'Content-Encoding': 'gzip',
+    'Expires': 31104000
+}
 
 module.exports = function (ossConfig, config){
     client = new OSS.Wrapper(ossConfig);
@@ -41,7 +46,7 @@ function walkUpload(filePath){
                             let fileKey = filedir.slice(rootPath.length + 1);
                             fileKey = namespace ? `${namespace}/${fileKey}` : fileKey;
 
-                            client.put(fileKey, filedir).then(function (r1) {
+                            client.put(fileKey, filedir, { headers: HEADERS }).then(function (r1) {
                                 console.log('success:', r1.url);
                                 return client.get(fileKey);
                             })
