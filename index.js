@@ -4,10 +4,13 @@ var path = require('path');
 var rootPath = '';
 var namespace = '';
 var client = null;
-var HEADERS = {
+
+var HEADERS_COMMON = {
+    'Cache-Control': 'max-age=31104000',
+}
+var HEADERS_GZIP = {
     'Cache-Control': 'max-age=31104000',
     'Content-Encoding': 'gzip',
-    'Expires': 31104000
 }
 
 module.exports = function (ossConfig, config){
@@ -16,6 +19,10 @@ module.exports = function (ossConfig, config){
     namespace = config.namespace;
 
     walkUpload(rootPath);
+}
+
+function isCssOrJs(url = ''){
+    return url.endsWith(".js") || url.endsWith(".css")
 }
 
 /**
@@ -46,7 +53,15 @@ function walkUpload(filePath){
                             let fileKey = filedir.slice(rootPath.length + 1);
                             fileKey = namespace ? `${namespace}/${fileKey}` : fileKey;
 
-                            client.put(fileKey, filedir, { headers: HEADERS }).then(function (r1) {
+                            let headers = {}
+                            if(isCssOrJs(fileKey)) {
+                                headers = HEADERS_GZIP;
+                            }
+                            else {
+                                headers = HEADERS_COMMON;
+                            }
+
+                            client.put(fileKey, filedir, { headers }).then(function (r1) {
                                 console.log('success:', r1.url);
                                 return client.get(fileKey);
                             })
