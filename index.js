@@ -1,6 +1,8 @@
 var OSS = require('ali-oss');
 var fs = require('fs');
 var path = require('path');
+var zlib = require('zlib');
+
 var rootPath = '';
 var namespace = '';
 var client = null;
@@ -53,12 +55,16 @@ function walkUpload(filePath){
                             let fileKey = filedir.slice(rootPath.length + 1);
                             fileKey = namespace ? `${namespace}/${fileKey}` : fileKey;
 
-                            let headers = {}
+                            let headers = HEADERS_COMMON;
+
+                            // if css or js, need gzip
                             if(isCssOrJs(fileKey)) {
+
+                                // add response header gzip
                                 headers = HEADERS_GZIP;
-                            }
-                            else {
-                                headers = HEADERS_COMMON;
+
+                                //gzip stream
+                                filedir = fs.createReadStream(filedir).pipe(zlib.createGzip())
                             }
 
                             client.put(fileKey, filedir, { headers }).then(function (r1) {
