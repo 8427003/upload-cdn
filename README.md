@@ -1,5 +1,5 @@
 # upload-cdn
-## 阿里云oss, 静态资源批量上传
+## 阿里云oss, 静态资源批量上传，目录递归上传。适合将前端资源css，js，imgs，font等资源文件批量上传到cdn
 
 ### 安装  
 ```
@@ -31,9 +31,11 @@ uploadCDN(SSO_CONFIG, {
 
 // output
 success: http://websiteh5.oss-cn-beijing.aliyuncs.com/static-pages/static/imgs/logo.09d8c515.png
+
+// 详细使用例子，请参考 ./test.js 以及 ./test-x文件夹
 ```
 
 ### 注意
 1. 所有资源文件被加上 Cache-Control: max-age=31104000 响应头
-2. css 和 js 文件会被gzip压缩后再上传，并添加响应头gzip
+2. css 和 js 文件会被gzip压缩后再上传，并添加响应头gzip，所以请不要自行gzip压缩css和js文件。
 3. 重复上传会覆盖先前文件
