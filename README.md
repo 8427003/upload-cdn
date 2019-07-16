@@ -24,14 +24,23 @@ const SSO_CONFIG = {
     bucket: 'css3-img'
 }
 
+// 递归上传文件夹中所有文件
 uploadCDN(SSO_CONFIG, {
-    namespace: 'static-pages/static', // 访问路径前缀
-    uploadDir: './test-x' // 要上传的文件夹
+    namespace: 'static-pages/static', // 访问路径前缀 [required]
+    uploadDir: './test-x' // 要上传的文件夹 [required]
 })
 
 // output
 success: http://websiteh5.oss-cn-beijing.aliyuncs.com/static-pages/static/imgs/logo.09d8c515.png
+
+// 上传文件中指定文件
+uploadCDN(SSO_CONFIG, {
+    namespace: 'static-pages/static', // 访问路径前缀 [required]
+    uploadDir: './test-x' // 要上传的文件夹 [required]
+    uploadFiles: ['./a.js'] // uploadDir 指定文件夹中部分文件, 未指定此属性则上传文件夹全部文件[option]
+})
 ```
+
 
 ### 注意
 1. 所有资源文件被加上 Cache-Control: max-age=31104000 响应头
